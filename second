@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>固体传声实验 - 多材质对比</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f0f7ff;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .experiment-area {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .explanation {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: #3498db;
+        }
+        
+        /* 桌面材质选择 */
+        .material-selector {
+            margin: 20px 0;
+        }
+        
+        .material-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .material-option {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background-color: white;
+        }
+        
+        .material-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .material-option.active {
+            border-color: #3498db;
+            background-color: #e8f4fc;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+        
+        .material-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .material-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .material-desc {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+        }
+        
+        .desk {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+        }
+        
+        /* 不同材质的桌面样式 */
+        .desk-wood {
+            background-color: #8b4513;
+        }
+        
+        .desk-metal {
+            background-color: #7f8c8d;
+            background-image: linear-gradient(45deg, #95a5a6 25%, transparent 25%, transparent 75%, #95a5a6 75%, #95a5a6),
+                              linear-gradient(45deg, #95a5a6 25%, transparent 25%, transparent 75%, #95a5a6 75%, #95a5a6);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+        
+        .desk-glass {
+            background-color: #3498db;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.8) 0%, rgba(41, 128, 185, 0.9) 100%);
+        }
+        
+        .desk-plastic {
+            background-color: #9b59b6;
+        }
+        
+        .desk-stone {
+            background-color: #34495e;
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="%232c3e50" stroke-width="2"/><path d="M20,20 L80,20 L80,80 L20,80 Z" fill="none" stroke="%232c3e50" stroke-width="1"/></svg>');
+            background-size: 30px 30px;
+        }
+        
+        .desk-surface {
+            width: 90%;
+            height: 80%;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+            transition: all 0.5s ease;
+        }
+        
+        .surface-wood {
+            background-color: #d2691e;
+        }
+        
+        .surface-metal {
+            background-color: #bdc3c7;
+            background-image: linear-gradient(45deg, #ecf0f1 25%, transparent 25%, transparent 75%, #ecf0f1 75%, #ecf0f1),
+                              linear-gradient(45deg, #ecf0f1 25%, transparent 25%, transparent 75%, #ecf0f1 75%, #ecf0f1);
+            background-size: 10px 10px;
+            background-position: 0 0, 5px 5px;
+        }
+        
+        .surface-glass {
+            background-color: rgba(52, 152, 219, 0.6);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .surface-plastic {
+            background-color: #8e44ad;
+        }
+        
+        .surface-stone {
+            background-color: #2c3e50;
+            background-image: url('data:image/svg+xml;utf8,<svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><circle cx="25" cy="25" r="3" fill="%237f8c8d" opacity="0.5"/><circle cx="10" cy="10" r="2" fill="%237f8c8d" opacity="0.5"/><circle cx="40" cy="15" r="2" fill="%237f8c8d" opacity="0.5"/><circle cx="15" cy="40" r="2" fill="%237f8c8d" opacity="0.5"/><circle cx="35" cy="35" r="2" fill="%237f8c8d" opacity="0.5"/></svg>');
+        }
+        
+        .student {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .student-head {
+            width: 60px;
+            height: 60px;
+            background-color: #ffcc99;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .student-ear {
+            position: absolute;
+            width: 15px;
+            height: 20px;
+            background-color: #e6b17e;
+            border-radius: 50%;
+            top: 20px;
+        }
+        
+        .ear-left {
+            left: -5px;
+        }
+        
+        .ear-right {
+            right: -5px;
+        }
+        
+        .student-body {
+            width: 100px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .student-a {
+            background-color: #27ae60; /* 绿色 - 敲击者 */
+        }
+        
+        .student-b {
+            background-color: #3498db; /* 蓝色 - 收听者 */
+        }
+        
+        .student-role {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+        
+        .student-1 {
+            transform: translateX(-20px);
+        }
+        
+        .student-2 {
+            transform: translateX(20px);
+        }
+        
+        .db-display {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 20;
+            min-width: 100px;
+            text-align: center;
+            display: none;
+        }
+        
+        .db-display.active {
+            display: block;
+            animation: pulse 1.5s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .control-group h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .volume-slider {
+            flex-grow: 1;
+            height: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+        }
+        
+        .volume-slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .volume-display {
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .volume-low { color: #27ae60; }
+        .volume-medium { color: #f39c12; }
+        .volume-high { color: #e74c3c; }
+        
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            flex: 1;
+            max-width: 200px;
+            justify-content: center;
+        }
+        
+        .tap-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .reset-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .auto-test-btn {
+            background-color: #9b59b6;
+            color: white;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .sound-waves {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .wave {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(52, 152, 219, 0.7);
+            transform: scale(0);
+            opacity: 1;
+        }
+        
+        .wave-active {
+            animation: wave-animation 1.5s ease-out;
+        }
+        
+        @keyframes wave-animation {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        /* 材质对比图表区域 */
+        .chart-container {
+            width: 100%;
+            margin-top: 30px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .chart-header h3 {
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .clear-chart-btn {
+            padding: 5px 15px;
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .chart {
+            width: 100%;
+            height: 250px;
+            position: relative;
+            border-bottom: 2px solid #ddd;
+            border-left: 2px solid #ddd;
+        }
+        
+        .chart-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .grid-line {
+            width: 100%;
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-data {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 20px 20px 40px;
+        }
+        
+        .data-bar {
+            flex: 1;
+            margin: 0 5px;
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            transition: height 0.5s ease;
+            opacity: 0.8;
+        }
+        
+        .data-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px 0 40px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .material-legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        
+        .info-box {
+            background-color: #e8f4fc;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .experiment-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .step-number {
+            background-color: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        
+        .step-content h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .material-comparison {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border: 1px solid #eee;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .comparison-table th {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .conclusion {
+            background-color: #d5f4e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            border-left: 5px solid #27ae60;
+        }
+        
+        .conclusion h3 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #ddd;
+            margin-top: 30px;
+        }
+        
+        .audio-controls {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .desk {
+                height: 250px;
+            }
+            
+            .control-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                max-width: 100%;
+            }
+            
+            .chart {
+                height: 200px;
+            }
+            
+            .material-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-vial"></i> 固体传声实验 - 多材质对比</h1>
+        <p>探究不同材质桌面对声音传播的影响。同学A敲击不同材质桌面，同学B测量接收到的DB值。</p>
+    </div>
+    
+    <div class="container">
+        <div class="experiment-area">
+            <h2><i class="fas fa-flask"></i> 实验区</h2>
+            <p>选择桌面材质，调整敲击力度，观察不同材质对声音传播的影响。</p>
+            
+            <!-- 材质选择 -->
+            <div class="material-selector">
+                <h3>桌面材质选择</h3>
+                <div class="material-options">
+                    <div class="material-option active" data-material="wood">
+                        <div class="material-icon"><i class="fas fa-tree"></i></div>
+                        <div class="material-name">木材</div>
+                        <div class="material-desc">中等传播效率</div>
+                    </div>
+                    <div class="material-option" data-material="metal">
+                        <div class="material-icon"><i class="fas fa-industry"></i></div>
+                        <div class="material-name">金属</div>
+                        <div class="material-desc">高传播效率</div>
+                    </div>
+                    <div class="material-option" data-material="glass">
+                        <div class="material-icon"><i class="fas fa-glass-whiskey"></i></div>
+                        <div class="material-name">玻璃</div>
+                        <div class="material-desc">低传播效率</div>
+                    </div>
+                    <div class="material-option" data-material="plastic">
+                        <div class="material-icon"><i class="fas fa-cube"></i></div>
+                        <div class="material-name">塑料</div>
+                        <div class="material-desc">较低传播效率</div>
+                    </div>
+                    <div class="material-option" data-material="stone">
+                        <div class="material-icon"><i class="fas fa-mountain"></i></div>
+                        <div class="material-name">石材</div>
+                        <div class="material-desc">高传播效率</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 音量控制 -->
+            <div class="control-group">
+                <h3>敲击力度控制</h3>
+                <div class="volume-control">
+                    <span style="color: #27ae60;"><i class="fas fa-volume-down"></i> 轻</span>
+                    <input type="range" min="1" max="100" value="50" class="volume-slider" id="volumeSlider">
+                    <span style="color: #e74c3c;"><i class="fas fa-volume-up"></i> 重</span>
+                    <div class="volume-display volume-medium" id="volumeDisplay">50</div>
+                </div>
+            </div>
+            
+            <!-- 实验桌面 -->
+            <div class="desk desk-wood" id="desk">
+                <div class="desk-surface surface-wood" id="deskSurface">
+                    <!-- 同学A - 敲击者 -->
+                    <div class="student student-1">
+                        <div class="student-head">
+                            <div class="student-ear ear-left"></div>
+                            <div class="student-ear ear-right"></div>
+                        </div>
+                        <div class="student-body student-a">
+                            <div>同学 A</div>
+                            <div class="student-role">(敲击者)</div>
+                        </div>
+                        <div class="db-display" id="dbDisplayA">敲击力度: 50</div>
+                    </div>
+                    
+                    <!-- 同学B - 收听者 -->
+                    <div class="student student-2">
+                        <div class="student-head">
+                            <div class="student-ear ear-left"></div>
+                            <div class="student-ear ear-right"></div>
+                        </div>
+                        <div class="student-body student-b">
+                            <div>同学 B</div>
+                            <div class="student-role">(收听者)</div>
+                        </div>
+                        <div class="db-display" id="dbDisplayB">0 dB</div>
+                    </div>
+                </div>
+                
+                <!-- 声波动画 -->
+                <div class="sound-waves" id="soundWaves"></div>
+            </div>
+            
+            <div class="control-buttons">
+                <button class="tap-btn" id="tapButton">
+                    <i class="fas fa-hand-point-up"></i> 敲击桌面
+                </button>
+                <button class="reset-btn" id="resetButton">
+                    <i class="fas fa-redo"></i> 重置
+                </button>
+            </div>
+            
+            <button class="auto-test-btn" id="autoTestBtn">
+                <i class="fas fa-bolt"></i> 自动测试当前材质
+            </button>
+            
+            <div class="info-box">
+                <p><i class="fas fa-lightbulb"></i> <strong>实验说明：</strong> 选择不同材质桌面，用相同力度敲击，比较同学B接收到的DB值差异，探究材质对声音传播的影响。</p>
+            </div>
+            
+            <!-- DB图表区域 -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3><i class="fas fa-chart-bar"></i> 材质对比图表</h3>
+                    <button class="clear-chart-btn" id="clearChartBtn">清空图表</button>
+                </div>
+                
+                <div class="chart" id="chart">
+                    <div class="chart-grid" id="chartGrid">
+                        <!-- 网格线将通过JS动态生成 -->
+                    </div>
+                    <div class="chart-data" id="chartData">
+                        <!-- 数据条将通过JS动态生成 -->
+                    </div>
+                    <div class="chart-labels" id="chartLabels">
+                        <!-- 标签将通过JS动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="material-legend" id="materialLegend">
+                    <!-- 图例将通过JS动态生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="explanation">
+            <h2><i class="fas fa-book"></i> 实验原理</h2>
+            
+            <div class="audio-controls">
+                <h3><i class="fas fa-volume-up"></i> 材质对声音传播的影响</h3>
+                <p>不同材质对声音传播效率的影响因素：</p>
+                <ul style="padding-left: 20px; margin: 10px 0;">
+                    <li><strong>密度</strong>: 密度越高，声音传播速度越快</li>
+                    <li><strong>弹性</strong>: 弹性越好，声音衰减越小</li>
+                    <li><strong>分子结构</strong>: 分子排列越紧密，传声效率越高</li>
+                    <li><strong>硬度</strong>: 硬度越高，高频声音传播越好</li>
+                </ul>
+            </div>
+            
+            <div class="experiment-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>选择材质</h4>
+                        <p>选择不同材质的桌面：木材、金属、玻璃、塑料、石材。每种材质具有不同的声音传播特性。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>敲击桌面</h4>
+                        <p>用相同力度敲击不同材质的桌面。敲击力度可以通过滑块调整，保持实验条件一致。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>测量DB值</h4>
+                        <p>同学B测量接收到的声音DB值。DB值越高，表示该材质传声效率越高。</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>对比分析</h4>
+                        <p>将不同材质的DB值记录在图表中，对比分析哪种材质传声效率最高，哪种最低。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="material-comparison">
+                <h3><i class="fas fa-balance-scale"></i> 材质传声特性对比</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>材质</th>
+                            <th>声音传播速度</th>
+                            <th>声音衰减程度</th>
+                            <th>适合频率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>木材</strong></td>
+                            <td>中等 (3300-4500 m/s)</td>
+                            <td>中等</td>
+                            <td>中低频</td>
+                        </tr>
+                        <tr>
+                            <td><strong>金属</strong></td>
+                            <td>高 (5000-6000 m/s)</td>
+                            <td>低</td>
+                            <td>全频率</td>
+                        </tr>
+                        <tr>
+                            <td><strong>玻璃</strong></td>
+                            <td>中高 (4500-5500 m/s)</td>
+                            <td>高</td>
+                            <td>高频</td>
+                        </tr>
+                        <tr>
+                            <td><strong>塑料</strong></td>
+                            <td>低 (1500-2500 m/s)</td>
+                            <td>高</td>
+                            <td>低频</td>
+                        </tr>
+                        <tr>
+                            <td><strong>石材</strong></td>
+                            <td>高 (5000-6000 m/s)</td>
+                            <td>低</td>
+                            <td>全频率</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="conclusion">
+                <h3><i class="fas fa-check-circle"></i> 实验结论</h3>
+                <p>通过本实验，我们可以发现：<strong>不同材质对声音传播效率有显著影响</strong>。</p>
+                <p><strong>关键发现：</strong></p>
+                <ul style="padding-left: 20px; margin-top: 10px;">
+                    <li>金属和石材传声效率最高，DB值衰减最小</li>
+                    <li>塑料传声效率最低，DB值衰减最大</li>
+                    <li>木材传声效率中等，适合日常使用</li>
+                    <li>玻璃对高频声音传播较好，但整体衰减较大</li>
+                </ul>
+                <p>这些发现解释了为什么不同材质的物体敲击时声音不同，以及为什么有些材料更适合制作乐器。</p>
+            </div>
+            
+            <h2 style="margin-top: 30px;"><i class="fas fa-question-circle"></i> 思考问题</h2>
+            <ul style="padding-left: 20px; margin-top: 10px;">
+                <li style="margin-bottom: 8px;">为什么金属和石材的传声效率比塑料高？</li>
+                <li style="margin-bottom: 8px;">日常生活中，哪些应用利用了不同材质的传声特性？</li>
+                <li style="margin-bottom: 8px;">如果改变桌面的厚度，对DB值会有什么影响？</li>
+                <li style="margin-bottom: 8px;">为什么小提琴用木材制作，而钢琴框架用金属？</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>科学实验：固体传声 - 多材质对比 | 探究材质对声音传播的影响</p>
+        <p>© 2023 科学实验演示 | 建议在教师指导下进行实验</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM 元素
+            const tapButton = document.getElementById('tapButton');
+            const resetButton = document.getElementById('resetButton');
+            const autoTestBtn = document.getElementById('autoTestBtn');
+            const clearChartBtn = document.getElementById('clearChartBtn');
+            const soundWaves = document.getElementById('soundWaves');
+            const dbDisplayA = document.getElementById('dbDisplayA');
+            const dbDisplayB = document.getElementById('dbDisplayB');
+            const student1 = document.querySelector('.student-1');
+            const student2 = document.querySelector('.student-2');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const volumeDisplay = document.getElementById('volumeDisplay');
+            const chartGrid = document.getElementById('chartGrid');
+            const chartData = document.getElementById('chartData');
+            const chartLabels = document.getElementById('chartLabels');
+            const materialLegend = document.getElementById('materialLegend');
+            const desk = document.getElementById('desk');
+            const deskSurface = document.getElementById('deskSurface');
+            const materialOptions = document.querySelectorAll('.material-option');
+            
+            // 实验状态
+            let experimentActive = false;
+            let currentVolume = 50;
+            let currentMaterial = 'wood';
+            let audioContext = null;
+            let materialData = {
+                wood: { dbValues: [], color: '#8b4513' },
+                metal: { dbValues: [], color: '#7f8c8d' },
+                glass: { dbValues: [], color: '#3498db' },
+                plastic: { dbValues: [], color: '#9b59b6' },
+                stone: { dbValues: [], color: '#34495e' }
+            };
+            let testCount = { wood: 0, metal: 0, glass: 0, plastic: 0, stone: 0 };
+            
+            // 材质属性
+            const materialProperties = {
+                wood: { name: '木材', baseMultiplier: 1.0, variance: 8, soundType: 'wood' },
+                metal: { name: '金属', baseMultiplier: 1.3, variance: 5, soundType: 'metal' },
+                glass: { name: '玻璃', baseMultiplier: 0.7, variance: 12, soundType: 'glass' },
+                plastic: { name: '塑料', baseMultiplier: 0.5, variance: 15, soundType: 'plastic' },
+                stone: { name: '石材', baseMultiplier: 1.2, variance: 6, soundType: 'stone' }
+            };
+            
+            // 材质颜色映射
+            const materialColors = {
+                wood: '#8b4513',
+                metal: '#7f8c8d',
+                glass: '#3498db',
+                plastic: '#9b59b6',
+                stone: '#34495e'
+            };
+            
+            // 初始化
+            updateVolumeDisplay(currentVolume);
+            createChartGrid();
+            updateMaterialLegend();
+            
+            // 材质选择
+            materialOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除所有active类
+                    materialOptions.forEach(opt => opt.classList.remove('active'));
+                    // 为当前按钮添加active类
+                    this.classList.add('active');
+                    
+                    // 更新当前材质
+                    currentMaterial = this.getAttribute('data-material');
+                    
+                    // 更新桌面外观
+                    updateDeskAppearance(currentMaterial);
+                });
+            });
+            
+            // 更新桌面外观
+            function updateDeskAppearance(material) {
+                // 移除所有材质类
+                desk.className = 'desk';
+                deskSurface.className = 'desk-surface';
+                
+                // 添加当前材质类
+                desk.classList.add(`desk-${material}`);
+                deskSurface.classList.add(`surface-${material}`);
+            }
+            
+            // 创建图表网格
+            function createChartGrid() {
+                chartGrid.innerHTML = '';
+                
+                // 创建5条水平网格线
+                for (let i = 0; i <= 5; i++) {
+                    const gridLine = document.createElement('div');
+                    gridLine.className = 'grid-line';
+                    chartGrid.appendChild(gridLine);
+                }
+            }
+            
+            // 更新图例
+            function updateMaterialLegend() {
+                materialLegend.innerHTML = '';
+                
+                Object.keys(materialProperties).forEach(material => {
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    
+                    const legendColor = document.createElement('div');
+                    legendColor.className = 'legend-color';
+                    legendColor.style.backgroundColor = materialColors[material];
+                    
+                    const legendText = document.createElement('span');
+                    legendText.textContent = materialProperties[material].name;
+                    
+                    legendItem.appendChild(legendColor);
+                    legendItem.appendChild(legendText);
+                    materialLegend.appendChild(legendItem);
+                });
+            }
+            
+            // 更新图表
+            function updateChart() {
+                chartData.innerHTML = '';
+                chartLabels.innerHTML = '';
+                
+                // 获取所有材质的数据
+                const allData = [];
+                Object.keys(materialProperties).forEach(material => {
+                    const materialName = materialProperties[material].name;
+                    const dbValues = materialData[material].dbValues;
+                    
+                    if (dbValues.length > 0) {
+                        // 计算该材质的平均DB值
+                        const avgDb = dbValues.reduce((sum, val) => sum + val, 0) / dbValues.length;
+                        allData.push({ material: materialName, avgDb: avgDb, color: materialColors[material] });
+                    }
+                });
+                
+                if (allData.length === 0) return;
+                
+                // 计算最大DB值用于比例缩放
+                const maxDb = Math.max(...allData.map(item => item.avgDb));
+                const chartMaxHeight = maxDb * 1.2; // 留出20%的顶部空间
+                
+                // 创建数据条
+                allData.forEach((item, index) => {
+                    const barHeight = (item.avgDb / chartMaxHeight) * 100;
+                    
+                    const dataBar = document.createElement('div');
+                    dataBar.className = 'data-bar';
+                    dataBar.style.height = `${barHeight}%`;
+                    dataBar.style.backgroundColor = item.color;
+                    
+                    const dataValue = document.createElement('div');
+                    dataValue.className = 'data-value';
+                    dataValue.textContent = `${Math.round(item.avgDb)} dB`;
+                    
+                    dataBar.appendChild(dataValue);
+                    chartData.appendChild(dataBar);
+                    
+                    // 创建标签
+                    const label = document.createElement('div');
+                    label.textContent = item.material;
+                    chartLabels.appendChild(label);
+                });
+            }
+            
+            // 音量滑块事件
+            volumeSlider.addEventListener('input', function() {
+                currentVolume = parseInt(this.value);
+                updateVolumeDisplay(currentVolume);
+            });
+            
+            // 更新音量显示
+            function updateVolumeDisplay(volume) {
+                volumeDisplay.textContent = volume;
+                
+                // 更新音量显示颜色
+                if (volume <= 30) {
+                    volumeDisplay.className = 'volume-display volume-low';
+                } else if (volume <= 70) {
+                    volumeDisplay.className = 'volume-display volume-medium';
+                } else {
+                    volumeDisplay.className = 'volume-display volume-high';
+                }
+            }
+            
+            // 计算DB值（考虑材质影响）
+            function calculateDb(volume, material) {
+                const props = materialProperties[material];
+                
+                // 基础DB值 = 音量 * 材质系数
+                let db = volume * props.baseMultiplier;
+                
+                // 添加随机变化模拟实际环境
+                db += (Math.random() * props.variance - props.variance/2);
+                
+                // 确保DB值在合理范围内
+                db = Math.max(10, Math.min(120, Math.round(db)));
+                
+                return db;
+            }
+            
+            // 播放敲击声音（根据材质不同）
+            function playKnockSound(material) {
+                // 创建音频上下文（如果尚未创建）
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                // 根据材质设置声音特性
+                let frequency, duration, type;
+                switch(material) {
+                    case 'wood':
+                        frequency = 180 + Math.random() * 40;
+                        duration = 0.3;
+                        type = 'sine';
+                        break;
+                    case 'metal':
+                        frequency = 400 + Math.random() * 100;
+                        duration = 0.5;
+                        type = 'square';
+                        break;
+                    case 'glass':
+                        frequency = 800 + Math.random() * 200;
+                        duration = 0.2;
+                        type = 'sawtooth';
+                        break;
+                    case 'plastic':
+                        frequency = 120 + Math.random() * 30;
+                        duration = 0.4;
+                        type = 'sine';
+                        break;
+                    case 'stone':
+                        frequency = 250 + Math.random() * 80;
+                        duration = 0.6;
+                        type = 'sine';
+                        break;
+                    default:
+                        frequency = 200;
+                        duration = 0.3;
+                        type = 'sine';
+                }
+                
+                // 根据音量设置增益值
+                const gainValue = currentVolume / 200;
+                
+                // 创建振荡器
+                const oscillator = audioContext.createOscillator();
+                oscillator.type = type;
+                oscillator.frequency.value = frequency;
+                
+                const gainNode = audioContext.createGain();
+                gainNode.gain.value = gainValue;
+                
+                // 创建包络线使声音更像敲击声
+                const now = audioContext.currentTime;
+                const attackTime = 0.01;
+                const decayTime = duration * 0.3;
+                const sustainLevel = 0.3;
+                const releaseTime = duration * 0.7;
+                
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(gainValue, now + attackTime);
+                gainNode.gain.exponentialRampToValueAtTime(gainValue * sustainLevel, now + attackTime + decayTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + attackTime + decayTime + releaseTime);
+                
+                // 连接节点
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // 播放声音
+                oscillator.start(now);
+                oscillator.stop(now + duration + 0.1);
+                
+                return true;
+            }
+            
+            // 敲击桌面
+            tapButton.addEventListener('click', function() {
+                if (experimentActive) return;
+                
+                experimentActive = true;
+                
+                // 播放声音
+                playKnockSound(currentMaterial);
+                
+                // 创建声波动画
+                createSoundWaves();
+                
+                // 计算DB值
+                const dbValue = calculateDb(currentVolume, currentMaterial);
+                
+                // 显示同学A的敲击力度
+                dbDisplayA.textContent = `敲击力度: ${currentVolume}`;
+                dbDisplayA.classList.add('active');
+                
+                // 显示同学B接收到的DB值
+                setTimeout(() => {
+                    dbDisplayB.textContent = `${dbValue} dB (${materialProperties[currentMaterial].name})`;
+                    dbDisplayB.classList.add('active');
+                    
+                    // 记录DB值到当前材质
+                    testCount[currentMaterial]++;
+                    materialData[currentMaterial].dbValues.push(dbValue);
+                    
+                    // 更新图表
+                    updateChart();
+                    
+                    // 同学B反应动画
+                    student2.style.transform = 'translateX(20px) scale(1.1)';
+                    setTimeout(() => {
+                        student2.style.transform = 'translateX(20px)';
+                    }, 300);
+                }, 800);
+                
+                // 同学A敲击动画
+                student1.style.transform = 'translateX(-20px) scale(0.9)';
+                setTimeout(() => {
+                    student1.style.transform = 'translateX(-20px)';
+                }, 200);
+                
+                // 隐藏DB显示
+                setTimeout(() => {
+                    dbDisplayA.classList.remove('active');
+                    dbDisplayB.classList.remove('active');
+                }, 3000);
+                
+                // 禁用按钮
+                tapButton.disabled = true;
+                tapButton.innerHTML = '<i class="fas fa-hand-point-up"></i> 实验中...';
+                
+                // 延迟后启用按钮
+                setTimeout(() => {
+                    tapButton.disabled = false;
+                    tapButton.innerHTML = '<i class="fas fa-hand-point-up"></i> 敲击桌面';
+                    experimentActive = false;
+                }, 3500);
+            });
+            
+            // 自动测试按钮
+            autoTestBtn.addEventListener('click', function() {
+                if (experimentActive) return;
+                
+                experimentActive = true;
+                autoTestBtn.disabled = true;
+                autoTestBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 自动测试中...';
+                
+                const testVolumes = [30, 50, 70, 90];
+                let currentTest = 0;
+                
+                function runNextTest() {
+                    if (currentTest >= testVolumes.length) {
+                        // 测试完成
+                        autoTestBtn.disabled = false;
+                        autoTestBtn.innerHTML = '<i class="fas fa-bolt"></i> 自动测试当前材质';
+                        experimentActive = false;
+                        return;
+                    }
+                    
+                    // 设置当前音量
+                    currentVolume = testVolumes[currentTest];
+                    volumeSlider.value = currentVolume;
+                    updateVolumeDisplay(currentVolume);
+                    
+                    // 模拟点击敲击按钮
+                    setTimeout(() => {
+                        // 创建模拟点击事件
+                        const clickEvent = new MouseEvent('click', {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        tapButton.dispatchEvent(clickEvent);
+                        
+                        // 继续下一个测试
+                        currentTest++;
+                        setTimeout(runNextTest, 4000); // 等待4秒后执行下一个测试
+                    }, 1000);
+                }
+                
+                // 开始测试
+                runNextTest();
+            });
+            
+            // 重置按钮事件
+            resetButton.addEventListener('click', function() {
+                // 重置状态
+                experimentActive = false;
+                
+                // 清除声波
+                soundWaves.innerHTML = '';
+                
+                // 隐藏DB显示
+                dbDisplayA.classList.remove('active');
+                dbDisplayB.classList.remove('active');
+                
+                // 恢复学生位置
+                student1.style.transform = 'translateX(-20px)';
+                student2.style.transform = 'translateX(20px)';
+                
+                // 启用按钮
+                tapButton.disabled = false;
+                tapButton.innerHTML = '<i class="fas fa-hand-point-up"></i> 敲击桌面';
+                autoTestBtn.disabled = false;
+                autoTestBtn.innerHTML = '<i class="fas fa-bolt"></i> 自动测试当前材质';
+            });
+            
+            // 清空图表按钮
+            clearChartBtn.addEventListener('click', function() {
+                // 清空所有材质数据
+                Object.keys(materialData).forEach(material => {
+                    materialData[material].dbValues = [];
+                    testCount[material] = 0;
+                });
+                updateChart();
+            });
+            
+            // 创建声波动画
+            function createSoundWaves() {
+                // 清除之前的声波
+                soundWaves.innerHTML = '';
+                
+                // 根据材质和音量决定声波特性
+                const waveCount = 3 + Math.floor(currentVolume / 20);
+                const centerX = '30%'; // 从同学A位置开始
+                const centerY = '50%';
+                
+                // 根据材质设置声波颜色
+                let waveColor;
+                switch(currentMaterial) {
+                    case 'wood': waveColor = 'rgba(139, 69, 19, 0.7)'; break;
+                    case 'metal': waveColor = 'rgba(127, 140, 141, 0.7)'; break;
+                    case 'glass': waveColor = 'rgba(52, 152, 219, 0.7)'; break;
+                    case 'plastic': waveColor = 'rgba(155, 89, 182, 0.7)'; break;
+                    case 'stone': waveColor = 'rgba(52, 73, 94, 0.7)'; break;
+                    default: waveColor = 'rgba(52, 152, 219, 0.7)';
+                }
+                
+                for (let i = 0; i < waveCount; i++) {
+                    setTimeout(() => {
+                        const wave = document.createElement('div');
+                        wave.classList.add('wave');
+                        wave.style.left = centerX;
+                        wave.style.top = centerY;
+                        wave.style.width = '50px';
+                        wave.style.height = '50px';
+                        wave.style.borderColor = waveColor;
+                        
+                        // 添加到声波容器
+                        soundWaves.appendChild(wave);
+                        
+                        // 触发动画 - 从A传播到B
+                        setTimeout(() => {
+                            wave.classList.add('wave-active');
+                            // 让声波从A移动到B
+                            wave.style.left = '70%';
+                        }, 10);
+                        
+                        // 动画结束后移除元素
+                        setTimeout(() => {
+                            if (wave.parentNode === soundWaves) {
+                                soundWaves.removeChild(wave);
+                            }
+                        }, 1600);
+                    }, i * 150);
+                }
+            }
+            
+            // 添加键盘支持
+            document.addEventListener('keydown', function(event) {
+                // 按空格键触发敲击
+                if (event.code === 'Space' && !experimentActive) {
+                    event.preventDefault();
+                    tapButton.click();
+                }
+                
+                // 按R键重置实验
+                if (event.code === 'KeyR') {
+                    resetButton.click();
+                }
+                
+                // 按A键自动测试
+                if (event.code === 'KeyA' && !experimentActive) {
+                    autoTestBtn.click();
+                }
+                
+                // 按C键清空图表
+                if (event.code === 'KeyC') {
+                    clearChartBtn.click();
+                }
+                
+                // 按1-5选择材质
+                if (event.code === 'Digit1') {
+                    event.preventDefault();
+                    document.querySelector('.material-option[data-material="wood"]').click();
+                }
+                if (event.code === 'Digit2') {
+                    event.preventDefault();
+                    document.querySelector('.material-option[data-material="metal"]').click();
+                }
+                if (event.code === 'Digit3') {
+                    event.preventDefault();
+                    document.querySelector('.material-option[data-material="glass"]').click();
+                }
+                if (event.code === 'Digit4') {
+                    event.preventDefault();
+                    document.querySelector('.material-option[data-material="plastic"]').click();
+                }
+                if (event.code === 'Digit5') {
+                    event.preventDefault();
+                    document.querySelector('.material-option[data-material="stone"]').click();
+                }
+                
+                // 按上/下箭头调整音量
+                if (event.code === 'ArrowUp') {
+                    event.preventDefault();
+                    let newVolume = Math.min(100, currentVolume + 5);
+                    volumeSlider.value = newVolume;
+                    currentVolume = newVolume;
+                    updateVolumeDisplay(newVolume);
+                }
+                
+                if (event.code === 'ArrowDown') {
+                    event.preventDefault();
+                    let newVolume = Math.max(1, currentVolume - 5);
+                    volumeSlider.value = newVolume;
+                    currentVolume = newVolume;
+                    updateVolumeDisplay(newVolume);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
